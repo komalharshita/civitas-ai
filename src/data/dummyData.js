@@ -1,0 +1,286 @@
+// ─────────────────────────────────────────────────────────────
+//  Civitas AI — Dummy Data
+//  Replace these with Firestore reads once backend is wired up.
+// ─────────────────────────────────────────────────────────────
+
+export const ISSUES = [
+  {
+    id: 'ISS-001',
+    title: 'Flood damage in Koregaon Park residential block',
+    description:
+      'Heavy rainfall has caused significant flooding on Lane 7. Multiple families displaced. Water level rising.',
+    location: 'Koregaon Park, Pune',
+    coordinates: { lat: 18.5362, lng: 73.8943 },
+    category: 'Flood Relief',
+    urgency: 'critical',
+    status: 'open',
+    reportedBy: 'Meera Joshi',
+    reportedAt: '2025-07-14T06:22:00Z',
+    assignedVolunteers: ['VOL-003', 'VOL-007'],
+    aiSummary: 'Immediate evacuation and water pumping required. Estimated 40+ families affected.',
+    tags: ['flood', 'evacuation', 'shelter'],
+  },
+  {
+    id: 'ISS-002',
+    title: 'Medical camp needed — elderly residents isolated',
+    description:
+      'Power outage since 36 hours. 15+ elderly residents with no medication access in Hadapsar sector.',
+    location: 'Hadapsar, Pune',
+    coordinates: { lat: 18.5018, lng: 73.9252 },
+    category: 'Medical Aid',
+    urgency: 'high',
+    status: 'in-progress',
+    reportedBy: 'Ravi Kulkarni',
+    reportedAt: '2025-07-14T07:45:00Z',
+    assignedVolunteers: ['VOL-001'],
+    aiSummary: 'Medical volunteers with emergency medicines and generator support needed within 2 hours.',
+    tags: ['medical', 'elderly', 'power-outage'],
+  },
+  {
+    id: 'ISS-003',
+    title: 'Food distribution required at relief camp',
+    description:
+      'Approx 200 displaced persons at community hall. No food supplies for the past 8 hours.',
+    location: 'Deccan Gymkhana, Pune',
+    coordinates: { lat: 18.5157, lng: 73.8403 },
+    category: 'Food & Water',
+    urgency: 'high',
+    status: 'open',
+    reportedBy: 'Anita Sharma',
+    reportedAt: '2025-07-14T08:10:00Z',
+    assignedVolunteers: [],
+    aiSummary: 'Food & water volunteers needed urgently. Coordination with NGO Akshara recommended.',
+    tags: ['food', 'water', 'relief-camp'],
+  },
+  {
+    id: 'ISS-004',
+    title: 'Tree fall blocking main arterial road',
+    description:
+      'Large tree collapsed onto Baner Road after storm. Emergency vehicles cannot pass. Requires chainsaw crew.',
+    location: 'Baner Road, Pune',
+    coordinates: { lat: 18.5590, lng: 73.7868 },
+    category: 'Infrastructure',
+    urgency: 'medium',
+    status: 'in-progress',
+    reportedBy: 'Suresh Patil',
+    reportedAt: '2025-07-14T08:55:00Z',
+    assignedVolunteers: ['VOL-005'],
+    aiSummary: 'Road clearance team required. Coordinate with MSEDCL for power line inspection.',
+    tags: ['road-block', 'tree-fall', 'infrastructure'],
+  },
+  {
+    id: 'ISS-005',
+    title: 'Shelter needed for stray animals',
+    description:
+      'Large group of stray dogs and cattle stranded near flooded area near Wakad bridge.',
+    location: 'Wakad, Pune',
+    coordinates: { lat: 18.5960, lng: 73.7619 },
+    category: 'Animal Welfare',
+    urgency: 'low',
+    status: 'open',
+    reportedBy: 'Priya Nair',
+    reportedAt: '2025-07-14T09:30:00Z',
+    assignedVolunteers: [],
+    aiSummary: 'Animal rescue team with transport. Coordinate with PAWS shelter.',
+    tags: ['animals', 'shelter', 'rescue'],
+  },
+  {
+    id: 'ISS-006',
+    title: 'Communication blackout — village cut off',
+    description:
+      'Sinhgad valley village (Panshet area) completely cut off. No mobile signal. Supplies needed.',
+    location: 'Panshet, Pune District',
+    coordinates: { lat: 18.3248, lng: 73.6784 },
+    category: 'Search & Rescue',
+    urgency: 'critical',
+    status: 'open',
+    reportedBy: 'District EOC',
+    reportedAt: '2025-07-14T05:00:00Z',
+    assignedVolunteers: ['VOL-002', 'VOL-006'],
+    aiSummary: 'Satellite communication and helicopter support may be required. Verify road access.',
+    tags: ['blackout', 'village', 'rescue', 'supplies'],
+  },
+]
+
+// ─── Volunteers ───────────────────────────────────────────────
+
+export const VOLUNTEERS = [
+  {
+    id: 'VOL-001',
+    name: 'Arjun Mehta',
+    avatar: 'AM',
+    skills: ['First Aid', 'Medical', 'CPR'],
+    status: 'busy',
+    assignedIssue: 'ISS-002',
+    location: 'Hadapsar, Pune',
+    rating: 4.9,
+    missionsCompleted: 47,
+    phone: '+91 98220 11234',
+    zone: 'East',
+  },
+  {
+    id: 'VOL-002',
+    name: 'Sneha Kapoor',
+    avatar: 'SK',
+    skills: ['Search & Rescue', 'Navigation', 'First Aid'],
+    status: 'busy',
+    assignedIssue: 'ISS-006',
+    location: 'En route Panshet',
+    rating: 4.8,
+    missionsCompleted: 62,
+    phone: '+91 99705 43210',
+    zone: 'South',
+  },
+  {
+    id: 'VOL-003',
+    name: 'Rahul Desai',
+    avatar: 'RD',
+    skills: ['Flood Relief', 'Boat Operation', 'Heavy Lifting'],
+    status: 'busy',
+    assignedIssue: 'ISS-001',
+    location: 'Koregaon Park',
+    rating: 4.7,
+    missionsCompleted: 33,
+    phone: '+91 91234 56789',
+    zone: 'North-East',
+  },
+  {
+    id: 'VOL-004',
+    name: 'Divya Iyer',
+    avatar: 'DI',
+    skills: ['Food Distribution', 'Logistics', 'Counselling'],
+    status: 'active',
+    assignedIssue: null,
+    location: 'Shivajinagar, Pune',
+    rating: 5.0,
+    missionsCompleted: 28,
+    phone: '+91 87654 32109',
+    zone: 'Central',
+  },
+  {
+    id: 'VOL-005',
+    name: 'Kiran Bhosle',
+    avatar: 'KB',
+    skills: ['Infrastructure', 'Chainsaw', 'Heavy Equipment'],
+    status: 'busy',
+    assignedIssue: 'ISS-004',
+    location: 'Baner Road',
+    rating: 4.6,
+    missionsCompleted: 19,
+    phone: '+91 94532 78901',
+    zone: 'West',
+  },
+  {
+    id: 'VOL-006',
+    name: 'Pooja Wagh',
+    avatar: 'PW',
+    skills: ['Communication', 'Satellite Ops', 'Coordination'],
+    status: 'busy',
+    assignedIssue: 'ISS-006',
+    location: 'En route Panshet',
+    rating: 4.8,
+    missionsCompleted: 54,
+    phone: '+91 96321 00987',
+    zone: 'South',
+  },
+  {
+    id: 'VOL-007',
+    name: 'Amit Kulkarni',
+    avatar: 'AK',
+    skills: ['Flood Relief', 'Evacuation', 'First Aid'],
+    status: 'busy',
+    assignedIssue: 'ISS-001',
+    location: 'Koregaon Park',
+    rating: 4.5,
+    missionsCompleted: 22,
+    phone: '+91 99234 10101',
+    zone: 'North-East',
+  },
+  {
+    id: 'VOL-008',
+    name: 'Nisha Gaikwad',
+    avatar: 'NG',
+    skills: ['Medical', 'Nursing', 'Triage'],
+    status: 'active',
+    assignedIssue: null,
+    location: 'Kothrud, Pune',
+    rating: 4.9,
+    missionsCompleted: 38,
+    phone: '+91 91111 22233',
+    zone: 'West',
+  },
+]
+
+// ─── Alerts ───────────────────────────────────────────────────
+
+export const ALERTS = [
+  {
+    id: 'ALT-001',
+    type: 'critical',
+    message: 'Flash flood warning issued for Mutha river basin. Expect level rise by 19:00 IST.',
+    source: 'IMD Weather Alert',
+    timestamp: '2025-07-14T09:45:00Z',
+    isRead: false,
+  },
+  {
+    id: 'ALT-002',
+    type: 'warning',
+    message: '3 volunteers approaching 6-hour shift limit. Schedule rotation required.',
+    source: 'System Auto-Monitor',
+    timestamp: '2025-07-14T09:30:00Z',
+    isRead: false,
+  },
+  {
+    id: 'ALT-003',
+    type: 'info',
+    message: 'AI dispatch engine processed 6 new issues. 4 volunteers optimally matched.',
+    source: 'Civitas AI Engine',
+    timestamp: '2025-07-14T09:15:00Z',
+    isRead: false,
+  },
+  {
+    id: 'ALT-004',
+    type: 'success',
+    message: 'Road clearance at Karve Road completed by VOL-009. Issue ISS-007 marked resolved.',
+    source: 'Field Report',
+    timestamp: '2025-07-14T09:00:00Z',
+    isRead: true,
+  },
+  {
+    id: 'ALT-005',
+    type: 'critical',
+    message: 'New distress signal received from Panshet sector — satellite beacon activated.',
+    source: 'Emergency EOC',
+    timestamp: '2025-07-14T08:50:00Z',
+    isRead: true,
+  },
+]
+
+// ─── Dashboard metrics ────────────────────────────────────────
+
+export const METRICS = {
+  activeIssues:         6,
+  resolvedToday:        4,
+  volunteersDeployed:   7,
+  volunteersAvailable:  2,
+  criticalCount:        2,
+  averageResponseTime:  '14 min',
+}
+
+// ─── Issue categories ─────────────────────────────────────────
+
+export const CATEGORIES = [
+  'Flood Relief',
+  'Medical Aid',
+  'Food & Water',
+  'Infrastructure',
+  'Search & Rescue',
+  'Animal Welfare',
+  'Shelter',
+  'Communication',
+  'Other',
+]
+
+// ─── Urgency levels ───────────────────────────────────────────
+
+export const URGENCY_LEVELS = ['critical', 'high', 'medium', 'low']
