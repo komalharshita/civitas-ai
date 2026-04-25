@@ -1,64 +1,72 @@
 // src/App.jsx
-// ─── Root component: layout shell + page routing ──────────────
+// ─── Root shell — routing, global state, live sidebar badges ──
 
 import React, { useState } from 'react'
-import Sidebar          from './components/layout/Sidebar'
-import Header           from './components/layout/Header'
-import Dashboard        from './pages/Dashboard'
-import PlaceholderPage  from './pages/PlaceholderPage'
-import { ALERTS }       from './data/dummyData'
+import Sidebar         from './components/layout/Sidebar'
+import Header          from './components/layout/Header'
+import Dashboard       from './pages/Dashboard'
+import Analytics       from './pages/Analytics'
+import PlaceholderPage from './pages/PlaceholderPage'
+import { useIssues }     from './hooks/useIssues'
+import { useVolunteers } from './hooks/useVolunteers'
 
 const PLACEHOLDER_PAGES = {
   issues:     'Issue Management',
   dispatch:   'Dispatch Map',
   volunteers: 'Volunteer Registry',
-  reports:    'Analytics & Reports',
   comms:      'Communications Log',
   admin:      'Administration',
   settings:   'System Settings',
 }
 
 export default function App() {
-  const [activePage,     setActivePage]     = useState('dashboard')
-  const [showIssueForm,  setShowIssueForm]  = useState(false)
+  const [activePage,    setActivePage]    = useState('dashboard')
+  const [showIssueForm, setShowIssueForm] = useState(false)
+  const [unreadAlerts,  setUnreadAlerts]  = useState(0)
 
-  const unreadAlerts = ALERTS.filter((a) => !a.isRead).length
+  // Live counts for sidebar badges — subscribed at root so they persist across page changes
+  const { issues }       = useIssues()
+  const { volunteers, availableCount } = useVolunteers()
+
+  const activeIssues = issues.filter((i) => i.status !== 'resolved').length
+
+  const sidebarBadges = {
+    activeIssues: activeIssues,
+    availableVols: availableCount,
+  }
 
   function renderPage() {
-    if (activePage === 'dashboard') {
-      return (
-        <Dashboard
-          onNewIssue={() => setShowIssueForm(true)}
-          showIssueForm={showIssueForm}
-          onCloseForm={() => setShowIssueForm(false)}
-        />
-      )
+    switch (activePage) {
+      case 'dashboard':
+        return (
+          <Dashboard
+            onNewIssue={() => setShowIssueForm(true)}
+            showIssueForm={showIssueForm}
+            onCloseForm={() => setShowIssueForm(false)}
+            onUnreadChange={setUnreadAlerts}
+          />
+        )
+      case 'reports':
+        return <Analytics />
+      default:
+        return <PlaceholderPage title={PLACEHOLDER_PAGES[activePage] || 'Page'} />
     }
-    return <PlaceholderPage title={PLACEHOLDER_PAGES[activePage] || 'Page'} />
   }
 
   return (
-    // Scanline CRT effect overlay
     <div className="scanline-overlay" style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      {/* ── Top Header ── */}
       <Header
         activePage={activePage}
         onNewIssue={() => setShowIssueForm(true)}
         unreadAlerts={unreadAlerts}
       />
-
-      {/* ── Body: Sidebar + Page Content ── */}
       <div className="flex flex-1 overflow-hidden">
         <Sidebar
           activePage={activePage}
           onNavigate={setActivePage}
+          badges={sidebarBadges}
         />
-
-        {/* Main content area */}
-        <main
-          className="flex-1 overflow-hidden flex flex-col"
-          style={{ background: 'var(--color-base)' }}
-        >
+        <main className="flex-1 overflow-hidden flex flex-col" style={{ background: 'var(--color-base)' }}>
           {renderPage()}
         </main>
       </div>
