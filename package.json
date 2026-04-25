@@ -6,7 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node tests/matchService.test.mjs && node tests/formatters.test.mjs",
+    "test:match": "node tests/matchService.test.mjs",
+    "test:formatters": "node tests/formatters.test.mjs",
+    "seed": "node --env-file=.env scripts/seedFirestore.js",
+    "deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

@@ -1,0 +1,15 @@
+{
+  "recommendations": [
+    "bradlc.vscode-tailwindcss",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "dsznajder.es7-react-js-snippets",
+    "christian-kohler.path-intellisense",
+    "naumovs.color-highlight",
+    "antfu.iconify",
+    "firebase.vscode-firebase-explorer",
+    "usernamehw.errorlens",
+    "wix.vscode-import-cost"
+  ],
+  "unwantedRecommendations": []
+}

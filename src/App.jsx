@@ -1,7 +1,6 @@
 // src/App.jsx
 // ─── Root shell — routing, global state, live sidebar badges ──
 
-<<<<<<< HEAD
 import React, { useState } from 'react'
 import Sidebar         from './components/layout/Sidebar'
 import Header          from './components/layout/Header'
@@ -10,15 +9,6 @@ import Analytics       from './pages/Analytics'
 import PlaceholderPage from './pages/PlaceholderPage'
 import { useIssues }     from './hooks/useIssues'
 import { useVolunteers } from './hooks/useVolunteers'
-=======
-import React, { useState, useEffect } from 'react'
-import Sidebar          from './components/layout/Sidebar'
-import Header           from './components/layout/Header'
-import Dashboard        from './pages/Dashboard'
-import PlaceholderPage  from './pages/PlaceholderPage'
-import { ALERTS }       from './data/dummyData'
-import { getVolunteers } from "./services/firestoreService";
->>>>>>> 2429b90 (Add volunteer fetching functionality and integrate useEffect in App component)
 
 const PLACEHOLDER_PAGES = {
   issues:     'Issue Management',
@@ -44,16 +34,6 @@ export default function App() {
     activeIssues: activeIssues,
     availableVols: availableCount,
   }
-
-  // ✅ Correct placement of useEffect
-  useEffect(() => {
-    const fetchData = async () => {
-      const data = await getVolunteers();
-      console.log("Volunteers:", data);
-    };
-
-    fetchData();
-  }, []);
 
   function renderPage() {
     switch (activePage) {

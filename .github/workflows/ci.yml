@@ -1,0 +1,124 @@
+# .github/workflows/ci.yml
+# ─────────────────────────────────────────────────────────────────────────────
+#  Civitas AI — Continuous Integration Pipeline
+#
+#  Runs on every push and pull request to main.
+#  Checks:
+#    1. Unit tests (matchService + formatters — 60 tests)
+#    2. Production build (zero errors required)
+#    3. Build artifact size report
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+
+  # ── Job 1: Test + Build ──────────────────────────────────────────────
+  test-and-build:
+    name: Tests & Build
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      # 3. Install dependencies
+      - name: Install dependencies
+        run: npm ci
+
+      # 4. Run unit tests — matching engine (26 tests)
+      - name: Run matchService unit tests
+        run: node tests/matchService.test.mjs
+
+      # 5. Run unit tests — formatters (34 tests)
+      - name: Run formatters unit tests
+        run: node tests/formatters.test.mjs
+
+      # 6. Build — uses dummy env vars so Firebase init doesn't fail
+      - name: Build production bundle
+        run: npm run build
+        env:
+          VITE_FIREBASE_API_KEY: ci-placeholder-key
+          VITE_FIREBASE_AUTH_DOMAIN: ci-placeholder.firebaseapp.com
+          VITE_FIREBASE_PROJECT_ID: ci-placeholder
+          VITE_FIREBASE_STORAGE_BUCKET: ci-placeholder.appspot.com
+          VITE_FIREBASE_MESSAGING_SENDER_ID: "000000000000"
+          VITE_FIREBASE_APP_ID: "1:000000000000:web:ci00000000000000"
+          VITE_GEMINI_API_KEY: ci-placeholder-gemini-key
+
+      # 7. Report build artifact sizes
+      - name: Report bundle sizes
+        run: |
+          echo "## Build Artifact Sizes" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Size | Gzip |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|------|------|" >> $GITHUB_STEP_SUMMARY
+          for f in dist/assets/*.js dist/assets/*.css; do
+            if [ -f "$f" ]; then
+              size=$(du -sh "$f" | cut -f1)
+              gzip_size=$(gzip -c "$f" | wc -c | awk '{printf "%.1fK", $1/1024}')
+              name=$(basename "$f")
+              echo "| $name | $size | $gzip_size |" >> $GITHUB_STEP_SUMMARY
+            fi
+          done
+
+      # 8. Upload build artifact (kept for 7 days)
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: civitas-ai-dist-${{ github.sha }}
+          path: dist/
+          retention-days: 7
+          if-no-files-found: error
+
+  # ── Job 2: Security scan — check for accidentally committed secrets ──
+  secret-scan:
+    name: Secret Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for .env file
+        run: |
+          if [ -f .env ]; then
+            echo "❌ ERROR: .env file found in repository! Remove it immediately."
+            exit 1
+          fi
+          echo "✅ No .env file found"
+
+      - name: Check for service account keys
+        run: |
+          if find . -name "serviceAccountKey.json" -not -path "*/node_modules/*" | grep -q .; then
+            echo "❌ ERROR: serviceAccountKey.json found! Remove it immediately."
+            exit 1
+          fi
+          echo "✅ No service account keys found"
+
+      - name: Check for hardcoded API keys in source
+        run: |
+          # Scan for patterns that look like real API keys in source files
+          if grep -r "AIzaSy[A-Za-z0-9_-]\{35\}" src/ --include="*.js" --include="*.jsx" --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "YOUR_KEY_HERE" | grep -v "ci-placeholder"; then
+            echo "⚠️  WARNING: Possible hardcoded API key found in source files. Review before merging."
+          else
+            echo "✅ No hardcoded API keys detected"
+          fi

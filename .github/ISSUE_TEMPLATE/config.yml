@@ -1,0 +1,15 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: 💬 General Discussion
+    url: https://github.com/your-username/civitas-ai/discussions
+    about: Ask questions, share ideas, or discuss the project.
+  - name: 📖 Documentation
+    url: https://github.com/your-username/civitas-ai/blob/main/README.md
+    about: Read the full setup and deployment guide.
+  - name: 🤖 Gemini API Docs
+    url: https://ai.google.dev/docs
+    about: Official documentation for the Gemini API.
+  - name: 🔥 Firebase Docs
+    url: https://firebase.google.com/docs
+    about: Official Firebase documentation.
