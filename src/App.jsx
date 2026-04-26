@@ -2,36 +2,33 @@
 // ─── Root shell — routing, global state, live sidebar badges ──
 
 import React, { useState } from 'react'
-import Sidebar         from './components/layout/Sidebar'
-import Header          from './components/layout/Header'
-import Dashboard       from './pages/Dashboard'
-import Analytics       from './pages/Analytics'
-import PlaceholderPage from './pages/PlaceholderPage'
-import { useIssues }     from './hooks/useIssues'
-import { useVolunteers } from './hooks/useVolunteers'
-
-const PLACEHOLDER_PAGES = {
-  issues:     'Issue Management',
-  dispatch:   'Dispatch Map',
-  volunteers: 'Volunteer Registry',
-  comms:      'Communications Log',
-  admin:      'Administration',
-  settings:   'System Settings',
-}
+import Sidebar            from './components/layout/Sidebar'
+import Header             from './components/layout/Header'
+import Dashboard          from './pages/Dashboard'
+import Analytics          from './pages/Analytics'
+import IssueManagement    from './pages/IssueManagement'
+import DispatchMap        from './pages/DispatchMap'
+import VolunteerRegistry  from './pages/VolunteerRegistry'
+import CommunicationsLog  from './pages/CommunicationsLog'
+import AdminPanel         from './pages/AdminPanel'
+import Settings           from './pages/Settings'
+import PlaceholderPage    from './pages/PlaceholderPage'
+import { useIssues }      from './hooks/useIssues'
+import { useVolunteers }  from './hooks/useVolunteers'
 
 export default function App() {
   const [activePage,    setActivePage]    = useState('dashboard')
   const [showIssueForm, setShowIssueForm] = useState(false)
   const [unreadAlerts,  setUnreadAlerts]  = useState(0)
 
-  // Live counts for sidebar badges — subscribed at root so they persist across page changes
-  const { issues }       = useIssues()
-  const { volunteers, availableCount } = useVolunteers()
+  // Live counts for sidebar badges
+  const { issues }                        = useIssues()
+  const { volunteers, availableCount }    = useVolunteers()
 
   const activeIssues = issues.filter((i) => i.status !== 'resolved').length
 
   const sidebarBadges = {
-    activeIssues: activeIssues,
+    activeIssues:  activeIssues,
     availableVols: availableCount,
   }
 
@@ -48,8 +45,20 @@ export default function App() {
         )
       case 'reports':
         return <Analytics />
+      case 'issues':
+        return <IssueManagement />
+      case 'dispatch':
+        return <DispatchMap />
+      case 'volunteers':
+        return <VolunteerRegistry />
+      case 'comms':
+        return <CommunicationsLog />
+      case 'admin':
+        return <AdminPanel />
+      case 'settings':
+        return <Settings />
       default:
-        return <PlaceholderPage title={PLACEHOLDER_PAGES[activePage] || 'Page'} />
+        return <PlaceholderPage title="Page" />
     }
   }
 
